@@ -1,0 +1,441 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.background {
+  background-image:url('/public/hero.png');
+  height:80vh;
+  width: 80vw;
+  background-size:cover
+}
+
+.divider {
+  height: 1%;
+  fill: whitesmoke;
+  width: 100%;
+  background-color: azure;
+  color: #000;
+}
+
+.info{
+  object-fit: contain;
+}
+/* Rounded border */
+hr.rounded {
+  border-top: 8px solid #ffffff;
+  border-radius: 5px;
+}
+
+.signup{
+  height: 80vh;
+}
+
+.avatar{
+
+  width: 20%;
+}
+
+input{
+  width: 100%;
+}
+
+input[type=file]::file-selector-button {
+ 
+  padding: .2em .4em;
+  border-radius: .2em;
+  background-color: #0dcaf0;
+  transition: 1s;
+  opacity: 80%;
+  color: #ffffff;
+}
+
+h1{
+  font-family: "Playfair Display", serif;
+  font-optical-sizing: auto;
+  font-weight: 900;
+  font-style: normal;
+}
+label{
+  font-family: "Fredoka", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100
+}
+p{
+  font-family: "Fredoka", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100
+}
+.card {
+  /* Add shadows to create the "card" effect */
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+}
+
+/* On mouse-over, add a deeper shadow */
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.sidenav {
+  width: 10%;
+  z-index: 1;
+  height: 50vh;
+  left: 10px;
+  background: #eee;
+  overflow-x: hidden;
+  padding: 8px 0;
+
+}
+
+a {
+  padding: 6px 8px 6px 16px;
+  text-decoration: none;
+  color: #0dcaf0;
+  opacity: 80%;
+  display: block;
+}
+
+ a:hover {
+  color: #0dcaf0;
+}
+a.active {
+  color: #0dcaf0;
+  opacity: 50%;
+  pointer-events: none;
+  
+}
+a.inactive {
+  color: #000;
+  opacity: 60%;
+ 
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}
+
+.profile{
+  width:30%;
+  height: 30%;
+  object-fit: fill;
+}
+
+.messageimage{
+  height: 5%;
+  width: 5%;
+  border-radius: 50%;
+  object-fit: fill;
+}
+.sidemessage {
+  
+  width: 15%;
+  height: 90vh;
+  left: 10px;
+  background: #fff;
+  overflow-x: hidden;
+  padding: 8px 0;
+}
+
+.fullmessagebackground{
+  height: 90vh;
+ margin-left: 1%
+}
+.allconvosheader{
+  height: 10%;
+ 
+}
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+* {
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+.fullmessagebackground img {
+  width: 50px;
+  vertical-align: middle;
+  border-style: none;
+  border-radius: 100%;
+}
+/* Styling the msg-header container */
+.msg-header {
+  border: 1px solid #ccc;
+  width: 100%;
+  height: 10%;
+  border-bottom: none;
+  display: inline-block;
+  background-color: #efefef;
+  margin: 0;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+/* Styling the profile picture */
+.msgimg {
+  margin-left: 2%;
+  float: left;
+}
+
+.container1 {
+ height: 90vh;
+  margin: 10%;
+}
+
+/* styling user-name */
+.active {
+  width: 150px;
+  float: left;
+  color: black;
+  font-weight: bold;
+  margin: 0 0 0 5px;
+  height: 10%;
+
+}
+/* Styling the inbox */
+.chat-page {
+  padding: 0 0 50px 0;
+  height: 90vh;
+}
+
+.msg-inbox {
+  border: 1px solid #ccc;
+  overflow: hidden;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+
+
+.chats {
+  padding: 30px 15px 0 25px;
+}
+
+.msg-page {
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+/* Styling the msg-bottom container */
+.msg-bottom {
+      border-top: 1px solid #ccc;
+      position: relative;
+      height: 11%;
+      background-color: rgb(239 239 239);
+  }
+/* Styling the input field */
+  .input-group {
+      float: right;
+      margin-top: 13px;
+      margin-right: 20px;
+      outline: none !important;
+      border-radius: 20px;
+      width: 61% !important;
+      background-color: #fff;
+      position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: stretch;
+  }
+  
+  .input-group>.form-control {
+      position: relative;
+      flex: 1 1 auto;
+      width: 1%;
+      margin-bottom: 0;
+  }
+  
+  .form-control {
+      border: none !important;
+      border-radius: 20px !important;
+      display: block;
+      height: calc(2.25rem + 2px);
+      padding: 0.375rem 0.75rem;
+      font-size: 1rem;
+      line-height: 1.5;
+      color: #495057;
+      background-color: #fff;
+      background-clip: padding-box;
+      transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+  }
+  
+  .input-group-text {
+      background: transparent !important;
+      border: none !important;
+      display: flex;
+      align-items: center;
+      padding: 0.375rem 0.75rem;
+      margin-bottom: 0;
+      font-size: 1.5rem;
+      font-weight: b;
+      line-height: 1.5;
+      color: #495057;
+      text-align: center;
+      white-space: nowrap;
+      background-color: #e9ecef;
+      border: 1px solid #ced4da;
+      border-radius: 0.25rem;
+      font-weight: bold !important;
+      cursor: pointer;
+  }
+  
+  input:focus {
+      outline: none;
+      border: none !important;
+      box-shadow: none !important;
+  }
+  
+  .send-icon {
+      font-weight: bold !important;
+  }
+
+/* Styling the avatar  */
+received-chats-img {
+  display: inline-block;
+  width: 50px;
+  float: left;
+}
+
+.received-msg {
+  display: inline-block;
+  padding: 0 0 0 10px;
+  vertical-align: top;
+  width: 92%;
+}
+.received-msg-inbox {
+  width: 57%;
+}
+
+.received-msg-inbox p {
+  background: #efefef none repeat scroll 0 0;
+  border-radius: 10px;
+  color: #646464;
+  font-size: 14px;
+  margin-left: 1rem;
+  padding: 1rem;
+  width: 100%;
+  box-shadow: rgb(0 0 0 / 25%) 0px 5px 5px 2px;
+}
+  p {
+  overflow-wrap: break-word;
+}
+
+/* Styling the msg-sent time  */
+.time {
+  color: #777;
+  display: block;
+  font-size: 12px;
+  margin: 8px 0 0;
+}
+.outgoing-chats {
+  overflow: hidden;
+  margin: 26px 20px;
+}
+
+.outgoing-chats-msg p {
+  background-color: #3a12ff;
+  background-image: linear-gradient(45deg, #ee087f 0%, #DD2A7B 25%, #9858ac 50%, #8134AF 75%, #515BD4 100%);
+  color: #fff;
+  border-radius: 10px;
+  font-size: 14px;
+  color: #fff;
+  padding: 5px 10px 5px 12px;
+  width: 100%;
+  padding: 1rem;
+  box-shadow: rgb(0 0 0 / 25%) 0px 2px 5px 2px;
+}
+.outgoing-chats-msg {
+      float: right;
+      width: 46%;
+  }
+
+/* Styling the avatar */
+.outgoing-chats-img {
+  display: inline-block;
+  width: 50px;
+  float: right;
+  margin-right: 1rem;
+}
+@media only screen and (max-device-width: 850px) {
+  *,
+  .time {
+      font-size: 28px;
+  }
+  img {
+      width: 65px;
+  }
+  .msg-header {
+      height: 5%;
+  }
+  .msg-page {
+      max-height: none;
+  }
+  .received-msg-inbox p {
+      font-size: 28px;
+  }
+  .outgoing-chats-msg p {
+      font-size: 28px;
+  }
+}
+
+@media only screen and (max-device-width: 450px) {
+  *,
+  .time {
+      font-size: 28px;
+  }
+  img {
+      width: 65px;
+  }
+  .msg-header {
+      height: 5%;
+  }
+  .msg-page {
+      max-height: none;
+  }
+  .received-msg-inbox p {
+      font-size: 28px;
+  }
+  .outgoing-chats-msg p {
+      font-size: 28px;
+  }
+}
