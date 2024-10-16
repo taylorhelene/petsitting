@@ -64,7 +64,15 @@ hr.rounded {
 }
 
 .signup{
+  border-radius: 22px;
+-webkit-transform: translateZ(0);
+box-shadow: 0 19px 51px 0 rgba(206, 197, 197, 0.16), 0 14px 19px 0 rgba(0,0,0,0.07);
+object-fit:cover;
+}
+
+.signupimg1{
   height: 80vh;
+  overflow: hidden;
 }
 
 .avatar{
@@ -73,6 +81,9 @@ hr.rounded {
 }
 
 input{
+  width: 100%;
+}
+select{
   width: 100%;
 }
 
@@ -92,6 +103,12 @@ h1{
   font-weight: 900;
   font-style: normal;
 }
+h3{
+  font-family: "Playfair Display", serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
+}
 label{
   font-family: "Fredoka", sans-serif;
   font-optical-sizing: auto;
@@ -100,6 +117,7 @@ label{
   font-variation-settings:
     "wdth" 100
 }
+
 p{
   font-family: "Fredoka", sans-serif;
   font-optical-sizing: auto;
@@ -117,6 +135,11 @@ p{
 /* On mouse-over, add a deeper shadow */
 .card:hover {
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.card-selected {
+  border-left: 2px solid #0dcaf0;;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .sidenav {
