@@ -9,6 +9,7 @@
     <h1>Uploaded Images</h1>
     <% if (items.length > 0) { %>
         <% items.forEach(item => { %>
+            // az ad sp create-for-rbac --name "petsitter" --role "Cognitive Services OpenAI Contributor" --scopes "/subscriptions/2e34b20f-7a0c-46bd-8bbd-75a23f29f589/resourceGroups/Taylor/providers/Microsoft.CognitiveServices/accounts/taylo-m2uhk0qq-northcentralus"
             <div>
                 <img src="data:<%= item.img.contentType %>;base64,<%= item.img.data.toString('base64') %>" width="300" />
             </div>

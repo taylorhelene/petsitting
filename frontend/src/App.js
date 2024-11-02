@@ -8,6 +8,10 @@ import SignUpForm from "./SharedUtils/SignuporLogin/SignUpForm";
 import Login from "./SharedUtils/SignuporLogin/Login";
 import Profile from "./SharedUtils/LoggedIn/Profile";
 import Messages from "./SharedUtils/LoggedIn/Messages";
+import Images from "./SharedUtils/LoggedIn/Images";
+import List from "./SharedUtils/LoggedIn/List";
+import Owners from "./SharedUtils/Home/Owners";
+import Petsitters from "./SharedUtils/Home/Petsitters";
 
 function App() {
   return (
@@ -20,6 +24,10 @@ function App() {
           <Route path="/login"  element={<Login/>} />
           <Route path="/profile"  element={<Profile/>} />
           <Route path="/messages"  element={<Messages/>} />
+          <Route path="/images"  element={<Images/>} />
+          <Route path="/listing"  element={<List/>} />
+          <Route path="/petlisting"  element={<Petsitters/>} />
+          <Route path="/ownerlisting"  element={<Owners/>} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -1,8 +1,14 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import '../../App.css'
-import {  useNavigate, NavLink } from "react-router-dom";
+import {  useNavigate, NavLink  } from "react-router-dom";
+import { useEffect } from 'react';
+
+import * as powerbi from 'powerbi-client';
+import { models } from 'powerbi-client'; // Import models from powerbi-client
 
 export default function Profile(){
+    const user = JSON.parse(localStorage.getItem('user'));
+
     return(
         <div className='container'>
             <div className='row'>
@@ -11,28 +17,31 @@ export default function Profile(){
                     
                     <NavLink to="/profile" className='active '> Profile </NavLink>
                     <NavLink to="/messages" className=' inactive'> Messages </NavLink>
-                    <NavLink to="/" className='inactive'> Images </NavLink>
-
+                    <NavLink to="/images" className='inactive'> Images </NavLink>
+                    <NavLink to="/listing" className='inactive'> Listings </NavLink>
+                    
                 </div>
                 <div className='col-md-9 row m-2 '>
                     
                     <div className='card col-md-6  p-4'>
-                        <div align="center">
-                            <img className='profile contain' src={process.env.PUBLIC_URL + '/aboutus.png'}></img>
+                        <div align="center" className='p-0 m-0'>
+                            <img className='profile rounded' src={user.avatar} alt="User Avatar" />
                         </div>
-                        <p>My profile </p>
+                        <p>My profile: Welcome, {user.name} </p>
 
                         <div className='row'>
                             <div className='col-sm'>
-                                <p>Name</p>
+                                <p>City: {user.city}</p>
                                 <hr></hr>
                             </div>
                             <div className='col-sm'>
-                                <p>Location</p>
+                                <p>State: {user.state}</p>
                                 <hr></hr>
                             </div>
                         </div>
-                        <p>Email.com</p>
+                        <p>Email: {user.email}</p>
+                        <hr></hr>
+                        <p>Preference: {user.preference}</p>
                         <hr></hr>
                         <div align="center">
                             <button className='btn btn-info btn-rounded rounded' align='center'> Edit </button>
@@ -45,7 +54,9 @@ export default function Profile(){
                                 <p className='col-md-9'>My messages</p>
                                 <button className=' btn btn-info btn-rounded rounded col-sm-3'>View</button>
                             </div>
+                            <div id="reportContainer" style={{ height: '500px' }}></div>
                             <hr/>
+                            <iframe title="analysiss" width="1140" height="541.25" src="https://app.fabric.microsoft.com/reportEmbed?reportId=599f173e-e950-4ee6-90a4-1ffc74cbfc68&autoAuth=true&ctid=0765532a-06c1-4f0f-9f39-394689f5f8fe" frameborder="0" allowFullScreen="true"></iframe>
                         </div>
 
                         <div className='card p-4 m-2'>

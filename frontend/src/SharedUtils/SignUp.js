@@ -23,14 +23,14 @@ function SignUp(){
                     </h3>
                     <p>We'll personalize your sign up experience accordingly.</p>
 
-                    <div className={`row bg-body-tertiary p-2 m-2 rounded ${selected === 'petsitter' ? 'card-selected' : ''}`} onClick={() => handleSelect('petsitter')}>
+                    <div className={`row bg-body-tertiary p-2 m-2 rounded ${selected === 'owner' ? 'card-selected' : ''}`} onClick={() => handleSelect('petsitter')}>
                         <FcNext className='col-sm-2'/>
                         <div  className='col-sm'>
                             <p>I am here to hire a Pet Sitter</p>
                             <p>Communicate with our registered Sitters</p>
                         </div>
                     </div>
-                    <div className={`row bg-body-tertiary p-2 m-2 rounded ${selected === 'owner' ? 'card-selected' : ''}`}  onClick={() => handleSelect('owner')}>
+                    <div className={`row bg-body-tertiary p-2 m-2 rounded ${selected === 'petsitter' ? 'card-selected' : ''}`}  onClick={() => handleSelect('owner')}>
                         <FcNext className='col-sm-2'/>
                         <div  className='col-sm'>
                             <p>I am here to register as a Pet Sitter</p>

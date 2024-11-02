@@ -109,6 +109,12 @@ h3{
   font-weight: 700;
   font-style: normal;
 }
+h6{
+  font-family: "Playfair Display", serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style:normal;
+}
 label{
   font-family: "Fredoka", sans-serif;
   font-optical-sizing: auto;
@@ -176,16 +182,22 @@ a.inactive {
  
 }
 
+.selected2 {
+  border-left: 2px solid #0dcaf0;;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
 @media screen and (max-height: 450px) {
   .sidenav {padding-top: 15px;}
   .sidenav a {font-size: 18px;}
 }
 
 .profile{
-  width:30%;
-  height: 30%;
+  width:60%;
+  height: 60%;
   object-fit: fill;
 }
+
 
 .messageimage{
   height: 5%;
@@ -193,10 +205,8 @@ a.inactive {
   border-radius: 50%;
   object-fit: fill;
 }
-.sidemessage {
-  
+.sidemessage { 
   width: 15%;
-  height: 90vh;
   left: 10px;
   background: #fff;
   overflow-x: hidden;
@@ -222,6 +232,7 @@ a.inactive {
   vertical-align: middle;
   border-style: none;
   border-radius: 100%;
+  
 }
 /* Styling the msg-header container */
 .msg-header {
@@ -239,6 +250,8 @@ a.inactive {
 .msgimg {
   margin-left: 2%;
   float: left;
+  margin-bottom: 3%;
+  height: 99%;
 }
 
 .container1 {
@@ -248,7 +261,6 @@ a.inactive {
 
 /* styling user-name */
 .active {
-  width: 150px;
   float: left;
   color: black;
   font-weight: bold;
@@ -267,6 +279,7 @@ a.inactive {
   overflow: hidden;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
+  height: 80vh;
 }
 
 
@@ -275,15 +288,15 @@ a.inactive {
 }
 
 .msg-page {
-  max-height: 60vh;
+  max-height: 65vh;
   overflow-y: auto;
+  height: 65vh;
 }
 
 /* Styling the msg-bottom container */
 .msg-bottom {
       border-top: 1px solid #ccc;
-      position: relative;
-      height: 11%;
+      height: 5%;
       background-color: rgb(239 239 239);
   }
 /* Styling the input field */
@@ -293,7 +306,7 @@ a.inactive {
       margin-right: 20px;
       outline: none !important;
       border-radius: 20px;
-      width: 61% !important;
+      width: 98% !important;
       background-color: #fff;
       position: relative;
       display: flex;
@@ -461,4 +474,37 @@ received-chats-img {
   .outgoing-chats-msg p {
       font-size: 28px;
   }
+}
+
+ .php-email-form input[type=text],
+ .php-email-form input[type=email],
+ .php-email-form textarea {
+  color: var(--default-color);
+  background-color: color-mix(in srgb, var(--background-color), transparent 50%);
+  border-color: color-mix(in srgb,  #61dafb, transparent 50%);
+  font-size: 14px;
+  padding: 10px 15px;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+.php-email-form input[type=text]:focus,
+.php-email-form input[type=email]:focus,
+.php-email-form textarea:focus {
+  border-color: var(--accent-color);
+}
+
+.php-email-form input[type=text]::placeholder,
+.php-email-form input[type=email]::placeholder,
+.php-email-form textarea::placeholder {
+  color: color-mix(in srgb, var(--default-color), transparent 70%);
+}
+
+.php-email-form button[type=submit] {
+  color: var(--contrast-color);
+  background:  #61dafb;
+  border: 0;
+  padding: 10px 30px;
+  transition: 0.4s;
+  border-radius: 50px;
 }
