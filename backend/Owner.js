@@ -53,6 +53,15 @@ const ownerSchema = new mongoose.Schema({
         type: String  // Each entry in the array will be a URL (string)
     }],
 
+    similarityAnalysis: [
+        {
+            image1: String,
+            image2: String,
+            similarity: String,
+            result: String // Store analysis result, e.g., "Similar Person" or "Different Person"
+        }
+    ],
+
     // New messages array
     messages: [messageSchema]
 });

@@ -333,9 +333,30 @@ app.post('/petsitter', upload.fields([
          const imagesToCompare = [imageUrl, ...fileUrls];  // All image URLs
          const similarityResults = await compareImages(imagesToCompare);
  
-         console.log('Similarity Results:', similarityResults);
- 
+         // Map over the results to extract the similarity values and join them into a single string
+        const similarityString = similarityResults
+            .map(result => result.similarity)
+            .join(', ');
 
+        console.log(similarityString);
+         
+    // Save to the database
+    try {
+       
+        // Send email and similarity results to Power BI
+        const powerBIResponse = await axios.post('https://api.powerbi.com/beta/0765532a-06c1-4f0f-9f39-394689f5f8fe/datasets/2a04f6f6-88ed-4f49-b244-04d681c4087b/rows?experience=power-bi&key=3jueY2ub2F3woKo7eYClhXJ8dHCYNscJlPtpS1Ho73LHu1VRg8I0k5w9RM%2BdFsiaMqAayFc%2FMvksJBjBN%2BhH5g%3D%3D', [{
+            email: req.body.email,
+            similarityResults: similarityString,
+        }], {
+            headers: { "Content-Type": "application/json" }
+        });
+
+        console.log('Power BI response:', powerBIResponse.data);
+
+
+    } catch (err) {
+        console.error('Database error or Power BI error:', err);
+    }
      // Hash the password with bcrypt (optional, if you are also doing client-side hashing)
      const hashedPassword = await bcrypt.hash(req.body.password, salt); // 10 is the salt rounds
    
@@ -352,6 +373,74 @@ app.post('/petsitter', upload.fields([
     Petsitter.create(obj)
     .then(item => {
         res.status(200).json({ message: 'Image uploaded successfully', item }); // Ensure a JSON response
+
+        
+        // Schedule delayed analysis
+        // Function to process similarity results with a delay and save to MongoDB
+setTimeout(async () => {
+    try {
+        const detailedResults = [];
+
+        for (const result of similarityResults) {
+            console.log("here");
+            const similarityScore = parseFloat(result.similarity);
+
+            // Only analyze results with a similarity between 50% and 100%
+            if (similarityScore > 50 && similarityScore < 100) {
+                const prediction = await openAiPredictiveAnalysis({
+                    image1: result.image1,
+                    image2: result.image2,
+                    similarity: result.similarity
+                });
+
+                // Add the detailed result to the list
+                detailedResults.push({
+                    image1: result.image1,
+                    image2: result.image2,
+                    similarity: result.similarity,
+                    result: prediction || "No prediction available"
+                });
+            }
+        }
+
+        // Save analysis results in MongoDB
+        await Petsitter.updateOne(
+            { email: req.body.email },
+            { $set: { similarityAnalysis: detailedResults } }
+        );
+
+        console.log("Detailed analysis saved to MongoDB:", detailedResults);
+    } catch (err) {
+        console.error("Error in predictive analysis:", err);
+    }
+}, 60000);  // 60-second delay
+    
+            // Function to analyze similarity using OpenAI API
+async function openAiPredictiveAnalysis({ image1, image2, similarity }) {
+    const apiUrl = "https://backenddata.openai.azure.com/openai/deployments/gpt-4/chat/completions?api-version=2024-02-15-preview";  // Replace with your actual OpenAI API endpoint
+
+    try {
+        const response = await axios.post('https://backenddata.openai.azure.com/openai/deployments/gpt-4/chat/completions?api-version=2024-02-15-preview', {
+            model: "gpt-35-turbo",
+            messages: [
+                { role: "user", content:`Given a similarity score of ${similarity}  between two images, is it likely these images are of the same person or similar items?`}
+            ]
+        },{
+            headers: {
+                "Content-Type": "application/json",
+                "api-key": API_KEY,
+            }
+        }
+    );
+       
+        const data = await response.data;
+        console.log(data)
+        return openAIData?.choices[0]?.message?.content 
+    } catch (error) {
+        console.error("Error calling OpenAI API:", error);
+        return null;
+    }
+}
     })
     .catch(err => {
         console.error(err);
@@ -394,10 +483,29 @@ app.post('/owner', upload.fields([
        // Compare images using Azure Computer Vision
        const imagesToCompare = [imageUrl, ...fileUrls];  // All image URLs
        const similarityResults = await compareImages(imagesToCompare);
+       // Map over the results to extract the similarity values and join them into a single string
+        const similarityString = similarityResults
+        .map(result => result.similarity)
+        .join(', ');
 
-       console.log('Similarity Results:', similarityResults);
+        console.log(similarityString);
+    // Save to the database
+    try {
+       
+        // Send email and similarity results to Power BI
+        const powerBIResponse = await axios.post('https://api.powerbi.com/beta/0765532a-06c1-4f0f-9f39-394689f5f8fe/datasets/2a04f6f6-88ed-4f49-b244-04d681c4087b/rows?experience=power-bi&key=3jueY2ub2F3woKo7eYClhXJ8dHCYNscJlPtpS1Ho73LHu1VRg8I0k5w9RM%2BdFsiaMqAayFc%2FMvksJBjBN%2BhH5g%3D%3D', [{
+            email: req.body.email,
+            similarityResults: similarityString,
+        }], {
+            headers: { "Content-Type": "application/json" }
+        });
+
+        console.log('Power BI response:', powerBIResponse.data);
 
 
+    } catch (err) {
+        console.error('Database error or Power BI error:', err);
+    }
      // Hash the password with bcrypt (optional, if you are also doing client-side hashing)
      const hashedPassword = await bcrypt.hash(req.body.password, salt); // 10 is the salt rounds
    
@@ -414,6 +522,72 @@ app.post('/owner', upload.fields([
     Owner.create(obj)
     .then(item => {
         res.status(200).json({ message: 'Image uploaded successfully', item }); // Ensure a JSON response
+            // Schedule delayed analysis
+           // Function to process similarity results with a delay and save to MongoDB
+setTimeout(async () => {
+    try {
+        const detailedResults = [];
+
+        for (const result of similarityResults) {
+            const similarityScore = parseFloat(result.similarity);
+
+            // Only analyze results with a similarity between 50% and 100%
+            if (similarityScore > 50 && similarityScore < 100) {
+                const prediction = await openAiPredictiveAnalysis({
+                    image1: result.image1,
+                    image2: result.image2,
+                    similarity: result.similarity
+                });
+
+                // Add the detailed result to the list
+                detailedResults.push({
+                    image1: result.image1,
+                    image2: result.image2,
+                    similarity: result.similarity,
+                    result: prediction || "No prediction available"
+                });
+            }
+        }
+
+        // Save analysis results in MongoDB
+        await Owner.updateOne(
+            { email: req.body.email },
+            { $set: { similarityAnalysis: detailedResults } }
+        );
+
+        console.log("Detailed analysis saved to MongoDB:", detailedResults);
+    } catch (err) {
+        console.error("Error in predictive analysis:", err);
+    }
+}, 60000);  // 60-second delay
+    
+            // Function to analyze similarity using OpenAI API
+async function openAiPredictiveAnalysis({ image1, image2, similarity }) {
+    const apiUrl = "https://backenddata.openai.azure.com/openai/deployments/gpt-4/chat/completions?api-version=2024-02-15-preview";  // Replace with your actual OpenAI API endpoint
+
+    try {
+        const response = await axios.post('https://backenddata.openai.azure.com/openai/deployments/gpt-4/chat/completions?api-version=2024-02-15-preview', {
+            model: "gpt-35-turbo",
+            messages: [
+                { role: "user", content:`Given a similarity score of ${similarity}  between two images, is it likely these images are of the same person or similar items?`}
+            ]}, 
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    "api-key": API_KEY,
+                }
+            }
+        );
+
+        const data = await response.data;
+        console.log(data)
+        return data?.choices[0]?.message?.content 
+    } catch (error) {
+        console.error("Error calling OpenAI API:", error);
+        return null;
+    }
+}
+
     })
     .catch(err => {
         console.error(err);
@@ -468,6 +642,29 @@ app.post('/login', async (req, res) => {
 app.get('/owners', async (req, res) => {
     try {
         const owners = await Owner.find({});
+        
+        // URL for Power BI streaming dataset
+        const powerBIUrl = "https://api.powerbi.com/beta/0765532a-06c1-4f0f-9f39-394689f5f8fe/datasets/6fe8cae3-c8f6-4a1a-a973-cb8450a848ab/rows?experience=power-bi&key=Teh8SmSqVqrmFGUfrs56%2FsoNdS9uT9I%2B1%2BG3wuuWJnMYolzGlaSJ5rkT1oRmU%2FoeONRfOMkfwZOtAg8hPhx3ug%3D%3D";
+        
+        // Format the data for Power BI
+        const data = owners.map(owner => ({
+            name: owner.name,
+            email: owner.email,
+            city:owner.city,
+            state: owner.state,
+            preference: owner.preference,
+        }));
+
+        // Send data to Power BI
+        await axios.post(powerBIUrl, { rows: data });
+        console.log("success")
+
+                
+    } catch (error) {
+        console.error(error);
+    }
+    try {
+        const owners = await Owner.find({});
         res.status(200).json(owners);
     } catch (error) {
         console.error(error);
@@ -476,12 +673,16 @@ app.get('/owners', async (req, res) => {
 });
 
 
-app.get('/updateOwners', async (req, res) => {
+
+
+
+
+app.get('/petsitters', async (req, res) => {
     try {
-        const petsitters = await Owner.find({});
+        const petsitters = await Petsitter.find({});
         
         // URL for Power BI streaming dataset
-        const powerBIUrl = 'https://api.powerbi.com/beta/{workspaceId}/datasets/{datasetId}/rows?key={yourKey}';
+        const powerBIUrl = "https://api.powerbi.com/beta/0765532a-06c1-4f0f-9f39-394689f5f8fe/datasets/30ad1f70-2671-4fbf-849d-08e8d88d7f12/rows?experience=power-bi&key=VjBCOMJkaw%2FlbSL4kJNdoIUedMKCe3DpGcwEIyeDLt%2BaL%2F8UZaOrorfSOaGIJV2uafe7EqWpoSngfWn8hHp%2F5g%3D%3D";
         
         // Format the data for Power BI
         const data = petsitters.map(petsitter => ({
@@ -490,21 +691,16 @@ app.get('/updateOwners', async (req, res) => {
             city: petsitter.city,
             state: petsitter.state,
             preference: petsitter.preference,
-            avatar: petsitter.avatar
         }));
 
         // Send data to Power BI
         await axios.post(powerBIUrl, { rows: data });
+        console.log("success")
+
         
-        res.status(200).json({ message: 'Data sent to Power BI successfully' });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Internal server error' });
     }
-});
-
-
-app.get('/petsitters', async (req, res) => {
 
     try {
         const Petsitters = await Petsitter.find({});

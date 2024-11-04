@@ -17,6 +17,7 @@ function Footer(){
     const [subject2, setSubject2] = useState('');
     const [message2, setMessage2] = useState('');
     const [showModal2, setShowModal2] = useState(false);
+    const [showEscrowModal, setShowEscrowModal] = useState(false); // State for the escrow modal
 
 
     const handleShowModal = () => setShowModal(true);
@@ -25,6 +26,8 @@ function Footer(){
     const handleShowModal2 = () => setShowModal2(true);
     const handleCloseModal2 = () => setShowModal2(false);
 
+    const handleShowEscrowModal = () => setShowEscrowModal(true);
+    const handleCloseEscrowModal = () => setShowEscrowModal(false);
 
     function sendMail() {
       
@@ -77,17 +80,40 @@ function Footer(){
             <img src={process.env.PUBLIC_URL + '/logo.png'} className='col-sm-2'></img>
             <div className='col-md-3'>
                 <h6>Our Services</h6>
+                <p onClick={()=> navigate("/signup")}>Messaging</p>
+                <p onClick={handleShowEscrowModal} style={{ cursor: 'pointer' }}>Escrow</p> 
             </div>
             <div className='col-md-3'>
                 <h6>Contact</h6>
-                <p onClick={handleShowModal} style={{ cursor: 'pointer' }}>Contact Us</p>
+                <p onClick={handleShowModal2} style={{ cursor: 'pointer' }}>Contact Us</p>
                 <p onClick={handleShowModal} style={{ cursor: 'pointer' }}>Report Abuse</p>
             </div>
             <div className='col-md-3'>
-                <h6>Payments</h6>
+                <h6>Payments for our escrow</h6>
+                <p>No Payments set up yet</p>
             </div>
             <hr className="rounded"></hr>
         </footer>
+
+            {/* Escrow Modal */}
+            <div className={`modal fade ${showEscrowModal ? 'show d-block' : ''}`} tabIndex="-1" role="dialog" style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+                <div className="modal-dialog" role="document">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title">Escrow Services</h5>
+                            <button type="button" className="btn-close" onClick={handleCloseEscrowModal}></button>
+                        </div>
+                        <div className="modal-body">
+                            <p>Please visit us in our local office for escrow services.This is done to ensure trust
+                                between us and the clients.
+                            </p>
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" onClick={handleCloseEscrowModal}>Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             {/* Contact Us Modal */}
             <div className={`modal fade ${showModal2 ? 'show d-block' : ''}`} tabIndex="-1" role="dialog" style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
