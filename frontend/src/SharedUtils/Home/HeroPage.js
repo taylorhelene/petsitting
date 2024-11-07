@@ -54,7 +54,7 @@ function HeroPage(){
                         <div className='col-sm'>
                             <div className='row'>
                                 <FcQuestions className='col-sm-2'/>
-                                <p className='col-sm'>AI checks for images</p>
+                                <p className='col-sm'>AI checks for image similarity</p>
                             </div>
                             <div className='row'>
                                 <FcQuestions className='col-sm-2'/>
@@ -64,11 +64,11 @@ function HeroPage(){
                         <div className='col-sm'>
                             <div className='row'>
                                 <FcQuestions className='col-sm-2'/>
-                                <p className='col-sm'>Admin checks for fraud</p>
+                                <p className='col-sm'>AI and admin checks for fraud</p>
                             </div>
                             <div className='row'>
                                 <FcQuestions className='col-sm-2'/>
-                                <p className='col-sm'>AI checks for images</p>
+                                <p className='col-sm'>Real Time streaming of data to create reports</p>
                             </div>
                         </div>
                     </div>

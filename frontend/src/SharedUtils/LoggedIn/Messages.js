@@ -20,7 +20,7 @@ export default function Messages(){
       setSelected(item)
       localStorage.setItem('receiver', JSON.stringify({email:selecteduser?.participantEmail}))
       setReceiver(JSON.parse(localStorage.getItem('receiver')));  // Set the receiver (if available)
-
+   
     };
 
     const navigate = useNavigate();
@@ -135,7 +135,6 @@ export default function Messages(){
       }
     };
 
-    console.log(messages,receiver.email);
 
     return(
         <div className='container'>

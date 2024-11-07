@@ -129,7 +129,7 @@ function Footer(){
                                     <div className="col-md-6">
                                     <input
                                             type="text"
-                                            value={name}
+                                            value={name2}
                                             onChange={(e) => setName2(e.target.value)}
                                             className="form-control"
                                             placeholder="Your Name"
@@ -139,7 +139,7 @@ function Footer(){
                                     <div className="col-md-6">
                                         <input
                                             type="email"
-                                            value={email}
+                                            value={email2}
                                             onChange={(e) => setEmail2(e.target.value)}
                                             className="form-control"
                                             placeholder="Your Email"
@@ -148,7 +148,7 @@ function Footer(){
                                     </div>
                                     <div className="col-md-12">
                                         <input
-                                            value={subject} 
+                                            value={subject2} 
                                             onChange={(e) => setSubject2(e.target.value)}
                                             className="form-control"
                                             placeholder="Subject"
@@ -157,7 +157,7 @@ function Footer(){
                                     </div>
                                     <div className="col-md-12">
                                         <textarea
-                                            value={message}
+                                            value={message2}
                                             onChange={(e) => setMessage2(e.target.value)}
                                             className="form-control"
                                             rows="6"

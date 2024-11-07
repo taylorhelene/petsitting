@@ -146,7 +146,6 @@ async function getAllMessagesForEmail(email, subject) {
 }
 
 const { EventHubProducerClient } = require("@azure/event-hubs");
-const { DefaultAzureCredential } = require("@azure/identity");
 
 // Initialize Event Hub client
 const connectionString = "Endpoint=sb://analyze.servicebus.windows.net/;SharedAccessKeyName=stream_petsitting-1_policy;SharedAccessKey=U2v44wXVB2y5Te5y1solvB5ahVLHhATIv+AEhLzgD9A=;EntityPath=petsitting"; // Replace with your Event Hub connection string
@@ -181,7 +180,7 @@ console.log(req.body)
 
         const openAIData = openAIResponse.data;
         console.log(openAIData);
-        const offensiveContent = openAIData?.choices[0]?.message?.content || "";
+        const offensiveContent = "" + openAIData?.choices[0]?.message?.content || "";
         console.log(offensiveContent);
 
         // 2. Check if offensive content was found
@@ -224,8 +223,7 @@ console.log(req.body)
                 { headers: { "Content-Type": "application/json", "api-key": API_KEY } }
             );
 
-            const finalOffensiveContent = finalCheckResponse.data?.choices[0]?.message?.content || "";
-            const finalIsOffensive = finalOffensiveContent.toLowerCase().includes("offensive");
+            const finalOffensiveContent = "" + finalCheckResponse.data?.choices[0]?.message?.content || "";
             console.log(finalOffensiveContent)
 
             // Send the final offensive result to another Event Hub
@@ -278,20 +276,20 @@ app.post('/contact', (req, res) => {
       async function main() {
         // send mail with defined transport object
         const info = await transporter.sendMail({
-          from: `Portfolio mailing account: <taylorhelene09@gmail.com>`, // my address 
+          from: `Contact mailing account: <taylorhelene09@gmail.com>`, // my address 
           to: "taylorhelene09@gmail.com", // list of receivers
-          cc: req.body.email, //we will cc sender here
-          subject: req.body.subject, // Subject line
-          text: req.body.message, // plain text body
-          html: `<b>I am contacting you from your portfolio.My name is ${req.body.name}.  My email is ${req.body.email}. ${req.body.message}. <br></br>This message was delivered from petsitting contact form.</b>`, // html body
+          cc: req.body.email2, //we will cc sender here
+          subject: req.body.subject2, // Subject line
+          text: req.body.message2, // plain text body
+          html: `<b>I am contacting you from your petsitting website.My name is ${req.body.name2}.  My email is ${req.body.email2}. ${req.body.message2}. <br></br>This message was delivered from petsitting contact form.</b>`, // html body
         });
       
-        console.log("Message sent: %s", info.messageId);
+        console.log("Message sent: %s");
        
       }
       
       main().catch(console.error);
-  res.send(req.body);
+    res.send(req.body);
 });
 
 
@@ -382,7 +380,6 @@ setTimeout(async () => {
         const detailedResults = [];
 
         for (const result of similarityResults) {
-            console.log("here");
             const similarityScore = parseFloat(result.similarity);
 
             // Only analyze results with a similarity between 50% and 100%
@@ -435,7 +432,7 @@ async function openAiPredictiveAnalysis({ image1, image2, similarity }) {
        
         const data = await response.data;
         console.log(data)
-        return openAIData?.choices[0]?.message?.content 
+        return data?.choices[0]?.message?.content 
     } catch (error) {
         console.error("Error calling OpenAI API:", error);
         return null;
@@ -532,7 +529,7 @@ setTimeout(async () => {
             const similarityScore = parseFloat(result.similarity);
 
             // Only analyze results with a similarity between 50% and 100%
-            if (similarityScore > 50 && similarityScore < 100) {
+            if (similarityScore > 40 && similarityScore < 100) {
                 const prediction = await openAiPredictiveAnalysis({
                     image1: result.image1,
                     image2: result.image2,
@@ -630,7 +627,8 @@ app.post('/login', async (req, res) => {
                 files: user.files, // Include files in the response
                 city: user.city,
                 state: user.state,
-                preference: user.preference
+                preference: user.preference,
+                similarityAnalysis: user.similarityAnalysis
             }
         });
     } catch (error) {

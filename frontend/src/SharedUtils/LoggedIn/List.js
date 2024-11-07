@@ -57,7 +57,7 @@ export default function List(){
                     
             </div>
             <div className='col-md-9 row m-2 card p-2'>
-            
+                        {people?.length> 0 ?  <h6>Listings</h6> : <p>Nobody has been listed yet</p>}
                         {people?.map((person, index) => (
                             <div key={index} className='card-selected' style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }} onClick={() => openModal(person)}>
                                 {/* Person Avatar */}

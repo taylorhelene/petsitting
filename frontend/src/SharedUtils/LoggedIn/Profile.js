@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 
 export default function Profile(){
     const user = JSON.parse(localStorage.getItem('user'));
+    console.log(user)
 
     return(
         <div className='container'>
@@ -25,7 +26,7 @@ export default function Profile(){
                         <div align="center" className='p-0 m-0'>
                             <img className='profile rounded' src={user.avatar} alt="User Avatar" />
                         </div>
-                        <p>My profile: Welcome, {user.name} </p>
+                        <h6>My profile: Welcome, {user.name} </h6>
 
                         <div className='row'>
                             <div className='col-sm'>
@@ -41,28 +42,33 @@ export default function Profile(){
                         <hr></hr>
                         <p>Preference: {user.preference}</p>
                         <hr></hr>
-                        <div align="center">
-                            <button className='btn btn-info btn-rounded rounded' align='center'> Edit </button>
-                        </div>
+                        
                     </div>
 
                     <div className='col-md-6'>
                         <div className='card p-4 m-2'>
                             <div className='row'>
-                                <p className='col-md-9'>My messages</p>
-                                <button className=' btn btn-info btn-rounded rounded col-sm-3'>View</button>
+                                <h6 className='col-md-9'>My Similarity results</h6>
                             </div>
-                            <div id="reportContainer" style={{ height: '500px' }}></div>
                             <hr/>
+                            <p>Number of similar photos: {user.similarityAnalysis?.length}</p>
+                            <div>
+                                <p> <strong>Similar photos data</strong></p>
+                                <hr/>
+                            </div>
+                            {user.similarityAnalysis?.map((analysis,index)=>{
+                                return(
+                                    <>
+                                    <p>{index+1}. </p>
+                                    <p>Similarity: {analysis.similarity}</p>
+                                    <p>Analysis : {analysis.result}</p>
+                                    </>
+                                )
+                            })}
+
                         </div>
 
-                        <div className='card p-4 m-2'>
-                            <div className='row'>
-                                <p className='col-md-9'>My messages</p>
-                                <button className=' btn btn-info btn-rounded rounded col-sm-3'>View</button>
-                            </div>
-                            <hr/>
-                        </div>
+                    
                     </div>
                     
                
