@@ -16,12 +16,14 @@ export default function Messages(){
 
     // Handler to set the selected item
     const handleSelect = (index, item) => {
-      setSelectedItem(index);
-      setSelected(item)
-      localStorage.setItem('receiver', JSON.stringify({email:selecteduser?.participantEmail}))
-      setReceiver(JSON.parse(localStorage.getItem('receiver')));  // Set the receiver (if available)
-   
-    };
+        setSelectedItem(index);        // Highlight selected conversation
+        setSelected(item);             // Set the selected user
+        
+        // Set the receiver directly from item without relying on selecteduser
+        const receiverData = { email: item.participantEmail };
+        localStorage.setItem('receiver', JSON.stringify(receiverData));
+        setReceiver(receiverData);      // Set the receiver with updated data immediately
+      };
 
     const navigate = useNavigate();
 
