@@ -123,16 +123,6 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 
-
-// Route to render image upload page and display images
-app.get('/', (req, res) => {
-    Petsitter.find({})
-        .then(data => {
-            res.render('imagepage', { items: data });
-        })
-        .catch(err => console.log(err));
-});
-
 // Helper function to fetch all messages for a user based on the subject
 async function getAllMessagesForEmail(email, subject) {
     if (subject === 'owner') {
@@ -148,25 +138,23 @@ async function getAllMessagesForEmail(email, subject) {
 const { EventHubProducerClient } = require("@azure/event-hubs");
 
 // Initialize Event Hub client
-const connectionString = "Endpoint=sb://analyze.servicebus.windows.net/;SharedAccessKeyName=stream_petsitting-1_policy;SharedAccessKey=U2v44wXVB2y5Te5y1solvB5ahVLHhATIv+AEhLzgD9A=;EntityPath=petsitting"; // Replace with your Event Hub connection string
+const connectionString = process.env.connectionstring;
 const eventHubName = "petsitting"; // Replace with your Event Hub name
 const producer = new EventHubProducerClient(connectionString, eventHubName);
 
 // Configuration for Azure OpenAI
-const API_KEY = "AuC3KHtdfEmEOZweN5ZHNAT9nEGaaoMh447KIfkSOiSzJHvt3KYtJQQJ99AJACYeBjFXJ3w3AAABACOG65XZ"; // Replace with your OpenAI API key
-
-
+const API_KEY = process.env.azureopenai;
 // Initialize 2nd Event Hub client
-const connectionString1 = "Endpoint=sb://analyze.servicebus.windows.net/;SharedAccessKeyName=policy1;SharedAccessKey=AKJP2AbYmZuu3G+y8xd+YxU/2M4sSD/kq+AEhBU2fgU=;EntityPath=messages"; // Replace with your Event Hub connection string
+const connectionString1 = process.env.connectionstring2;
 const eventHubName1 = "messages"; // Replace with your Event Hub name
 const producer1 = new EventHubProducerClient(connectionString1, eventHubName1);
 
 app.post('/api/send-complaint', async (req, res) => {
     const { email, message,subject } = req.body;
-console.log(req.body)
+    console.log(req.body)
     try {
         // 1. Send the email and message to Azure OpenAI for offensive words check
-        const openAIResponse = await axios.post('https://backenddata.openai.azure.com/openai/deployments/gpt-4/chat/completions?api-version=2024-02-15-preview', {
+        const openAIResponse = await axios.post(process.env.azureopenaiurl, {
             model: "gpt-35-turbo",
             messages: [
                 { role: "user", content: `Please check the following message for offensive content: "${message}"` }
@@ -213,7 +201,7 @@ console.log(req.body)
 
             // Send the combined message content to OpenAI for further check
             const finalCheckResponse = await axios.post(
-                'https://backenddata.openai.azure.com/openai/deployments/gpt-4/chat/completions?api-version=2024-02-15-preview', 
+                process.env.azureopenaiurl, 
                 {
                     model: "gpt-35-turbo",
                     messages: [
@@ -267,7 +255,7 @@ app.post('/contact', (req, res) => {
         secure: true,
         auth: {
               user:"taylorhelene09@gmail.com",
-              pass: "wopf hwci oizl dehu",
+              pass: process.env.gmailpass,
         },
       });
       
@@ -284,7 +272,7 @@ app.post('/contact', (req, res) => {
           html: `<b>I am contacting you from your petsitting website.My name is ${req.body.name2}.  My email is ${req.body.email2}. ${req.body.message2}. <br></br>This message was delivered from petsitting contact form.</b>`, // html body
         });
       
-        console.log("Message sent: %s");
+        console.log("Message sent: %s", info);
        
       }
       
@@ -409,7 +397,7 @@ app.post('/petsitter', upload.fields([
 
 // Function to analyze similarity using OpenAI API
 async function openAiPredictiveAnalysis({ image1, image2, similarity }) {
-    const apiUrl = "https://backenddata.openai.azure.com/openai/deployments/gpt-4/chat/completions?api-version=2024-02-15-preview";
+    const apiUrl = process.env.azureopenaiurl;
     try {
         const response = await axios.post(apiUrl, {
             model: "gpt-35-turbo",
@@ -508,45 +496,45 @@ app.post('/owner', upload.fields([
         res.status(200).json({ message: 'Image uploaded successfully', item }); // Ensure a JSON response
             // Schedule delayed analysis
            // Function to process similarity results with a delay and save to MongoDB
-setTimeout(async () => {
-    try {
-        const detailedResults = [];
-         //These dealays enable open ai not to return too many requests error
-        for (const result of similarityResults) {
-            const similarityScore = parseFloat(result.similarity);
+    setTimeout(async () => {
+        try {
+            const detailedResults = [];
+            //These dealays enable open ai not to return too many requests error
+            for (const result of similarityResults) {
+                const similarityScore = parseFloat(result.similarity);
 
-            // Only analyze results with a similarity between 50% and 100%
-            if (similarityScore > 50 && similarityScore < 100) {
-                // Wait for 60 seconds before each analysis
-                await new Promise(resolve => setTimeout(resolve, 60000));
+                // Only analyze results with a similarity between 50% and 100%
+                if (similarityScore > 50 && similarityScore < 100) {
+                    // Wait for 60 seconds before each analysis
+                    await new Promise(resolve => setTimeout(resolve, 60000));
 
-                const prediction = await openAiPredictiveAnalysis({
-                    image1: result.image1,
-                    image2: result.image2,
-                    similarity: result.similarity
-                });
+                    const prediction = await openAiPredictiveAnalysis({
+                        image1: result.image1,
+                        image2: result.image2,
+                        similarity: result.similarity
+                    });
 
-                // Add the detailed result to the list
-                detailedResults.push({
-                    image1: result.image1,
-                    image2: result.image2,
-                    similarity: result.similarity,
-                    result: prediction || "No prediction available"
-                });
+                    // Add the detailed result to the list
+                    detailedResults.push({
+                        image1: result.image1,
+                        image2: result.image2,
+                        similarity: result.similarity,
+                        result: prediction || "No prediction available"
+                    });
+                }
             }
+
+            // Save analysis results in MongoDB
+            await Owner.updateOne(
+                { email: req.body.email },
+                { $set: { similarityAnalysis: detailedResults } }
+            );
+
+            console.log("Detailed analysis saved to MongoDB:", detailedResults);
+        } catch (err) {
+            console.error("Error in predictive analysis:", err);
         }
-
-        // Save analysis results in MongoDB
-        await Owner.updateOne(
-            { email: req.body.email },
-            { $set: { similarityAnalysis: detailedResults } }
-        );
-
-        console.log("Detailed analysis saved to MongoDB:", detailedResults);
-    } catch (err) {
-        console.error("Error in predictive analysis:", err);
-    }
-}, 60000);  // 60-second delay
+    }, 60000);  // 60-second delay
     
             // Function to analyze similarity using OpenAI API
 async function openAiPredictiveAnalysis({ image1, image2, similarity }) {
