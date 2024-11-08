@@ -159,6 +159,11 @@ p{
 
 }
 
+.profilearea {
+  max-height: 80vh;
+  overflow: scroll;
+}
+
 a {
   padding: 6px 8px 6px 16px;
   text-decoration: none;

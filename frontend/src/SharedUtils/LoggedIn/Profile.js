@@ -22,7 +22,7 @@ export default function Profile(){
                 </div>
                 <div className='col-md-9 row m-2 '>
                     
-                    <div className='card col-md-6  p-4'>
+                    <div className='card col-md p-4 '>
                         <div align="center" className='p-0 m-0'>
                             <img className='profile rounded' src={user.avatar} alt="User Avatar" />
                         </div>
@@ -45,15 +45,15 @@ export default function Profile(){
                         
                     </div>
 
-                    <div className='col-md-6'>
-                        <div className='card p-4 m-2'>
-                            <div className='row'>
-                                <h6 className='col-md-9'>My Similarity results</h6>
+                    <div className='col-md'>
+                        <div className='card p-4  profilearea'>
+                            <div >
+                                <h6 >My Similarity results</h6>
                             </div>
                             <hr/>
-                            <p>Number of similar photos: {user.similarityAnalysis?.length}</p>
+                            <p>Number of comparisons validated by AI for photos: {user.similarityAnalysis?.length}</p>
                             <div>
-                                <p> <strong>Similar photos data</strong></p>
+                                <p> <strong>Similarity data</strong></p>
                                 <hr/>
                             </div>
                             {user.similarityAnalysis?.map((analysis,index)=>{

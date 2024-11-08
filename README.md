@@ -11,13 +11,18 @@ Website is designed to enhance the safety and reliability of a pet-sitting servi
 
 - OpenAI Offensive Content Check: Uses OpenAI's GPT model to identify offensive language in user messages.
 Image Similarity Analysis: Detects the similarity between uploaded images to check for potential duplicates or related images.
-- Event Hub Integration: Sends offensive content analysis and image similarity results to Azure Event Hubs.
+- Event Hub Integration: Sends offensive content analysis and image similarity results to Azure Event Hubs. Within the Azure portal, Event Hub’s Monitor section can show event flow, providing insights into data volume and latency.
 - Microsoft Fabric Reporting: Streams data to Microsoft Fabric for visualization and reporting, allowing administrators to monitor flagged content and similarity results.
 
 ## Installation
-- Clone the repository.
--Install dependencies using:
 
+- Clone the repository.
+- Install dependencies using:
+
+cd frontend
+npm install
+
+cd backend
 npm install
 
 ## Project Structure
@@ -61,7 +66,8 @@ Example Event Hub Data Structure:
 
 The information sent to Microsoft Fabric will display flagged terms, similarity scores, and images, creating a comprehensive dashboard for monitoring platform compliance and user interactions.
 
-Setup & Requirements
+## Setup & Requirements
+
 Azure OpenAI API Key: Ensure you have access to Azure OpenAI for offensive content and similarity analysis.
 Event Hubs Connection Strings: Configure connection strings for Event Hub integration.
 Microsoft Fabric Account: For dashboard access, set up a Fabric account and datasets.
@@ -79,6 +85,9 @@ FABRIC_DATASET_KEY="Your_Microsoft_Fabric_Dataset_Key"
 
 node Server.js
 
+## Running the WebSite
+
+npm start
 
 ## License
 This project is licensed under the MIT License. See the LICENSE file for details.

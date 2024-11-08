@@ -296,154 +296,141 @@ app.post('/contact', (req, res) => {
 
 // Route to handle image upload
 app.post('/petsitter', upload.fields([
-    { name: 'image', maxCount: 1 },   // Single image upload
-    { name: 'files', maxCount: 10 }   // Array of files (up to 10 files)
-]),   async(req, res, next) => {
-    console.log( req.body, req.files)
-   
+    { name: 'image', maxCount: 1 },
+    { name: 'files', maxCount: 10 }
+]), async (req, res, next) => {
+    console.log(req.body, req.files);
+
     if (!req.files) {
         return res.status(400).json({ error: 'No files uploaded' });
     }
+
     let imageUrl = '';
     let fileUrls = [];
     try {
-         // Upload the single image to Cloudinary
-         const imageResult = await uploadToCloudinary(req.files.image[0].buffer);
-         imageUrl = imageResult.secure_url;
- 
-         // Upload each file in the files array to Cloudinary
-         for (let i = 0; i < req.files.files.length; i++) {
-             const file = req.files.files[i];
-             const result = await uploadToCloudinary(file.buffer);
-             fileUrls.push(result.secure_url);  // Store Cloudinary URLs
-         }
+        // Upload the single image to Cloudinary
+        const imageResult = await uploadToCloudinary(req.files.image[0].buffer);
+        imageUrl = imageResult.secure_url;
 
-        
-         console.log('Image URL:', imageUrl);
-         console.log('File URLs:', fileUrls);
-       // res.json({ imageUrl: result.secure_url });
-      } catch (error) {
-        console.log(error)
-        //res.status(500).json({ error: 'Failed to upload image' });
-      }
+        // Upload each file in the files array to Cloudinary
+        for (let file of req.files.files) {
+            const result = await uploadToCloudinary(file.buffer);
+            fileUrls.push(result.secure_url);
+        }
 
-         // Compare images using Azure Computer Vision
-         const imagesToCompare = [imageUrl, ...fileUrls];  // All image URLs
-         const similarityResults = await compareImages(imagesToCompare);
- 
-         // Map over the results to extract the similarity values and join them into a single string
-        const similarityString = similarityResults
-            .map(result => result.similarity)
-            .join(', ');
+        console.log('Image URL:', imageUrl);
+        console.log('File URLs:', fileUrls);
+    } catch (error) {
+        console.error(error);
+    }
 
-        console.log(similarityString);
-         
+    // Compare images using Azure Computer Vision
+    const imagesToCompare = [imageUrl, ...fileUrls];
+    const similarityResults = await compareImages(imagesToCompare);
+
+    const similarityString = similarityResults
+        .map(result => result.similarity)
+        .join(', ');
+
+    console.log(similarityString);
+
     // Save to the database
     try {
-       
         // Send email and similarity results to Power BI
-        const powerBIResponse = await axios.post('https://api.powerbi.com/beta/0765532a-06c1-4f0f-9f39-394689f5f8fe/datasets/2a04f6f6-88ed-4f49-b244-04d681c4087b/rows?experience=power-bi&key=3jueY2ub2F3woKo7eYClhXJ8dHCYNscJlPtpS1Ho73LHu1VRg8I0k5w9RM%2BdFsiaMqAayFc%2FMvksJBjBN%2BhH5g%3D%3D', [{
+        await axios.post('https://api.powerbi.com/beta/0765532a-06c1-4f0f-9f39-394689f5f8fe/datasets/2a04f6f6-88ed-4f49-b244-04d681c4087b/rows?experience=power-bi&key=3jueY2ub2F3woKo7eYClhXJ8dHCYNscJlPtpS1Ho73LHu1VRg8I0k5w9RM%2BdFsiaMqAayFc%2FMvksJBjBN%2BhH5g%3D%3D', [{
             email: req.body.email,
             similarityResults: similarityString,
         }], {
             headers: { "Content-Type": "application/json" }
         });
 
-        console.log('Power BI response:', powerBIResponse.data);
-
-
     } catch (err) {
         console.error('Database error or Power BI error:', err);
     }
-     // Hash the password with bcrypt (optional, if you are also doing client-side hashing)
-     const hashedPassword = await bcrypt.hash(req.body.password, salt); // 10 is the salt rounds
-   
+
+    const hashedPassword = await bcrypt.hash(req.body.password, salt);
     const obj = {
         avatar: imageUrl,
-        files: fileUrls,  // Store array of file URLs
+        files: fileUrls,
         name: req.body.name,
         email: req.body.email,
         city: req.body.city,
         state: req.body.state,
         preference: req.body.location,
-        password: hashedPassword,  // Handle password securely
+        password: hashedPassword,
     };
+
     Petsitter.create(obj)
-    .then(item => {
-        res.status(200).json({ message: 'Image uploaded successfully', item }); // Ensure a JSON response
+        .then(item => {
+            res.status(200).json({ message: 'Image uploaded successfully', item });
 
-        
-        // Schedule delayed analysis
-        // Function to process similarity results with a delay and save to MongoDB
-setTimeout(async () => {
-    try {
-        const detailedResults = [];
+            // Schedule delayed analysis
+            setTimeout(async () => {
+                const detailedResults = [];
 
-        for (const result of similarityResults) {
-            const similarityScore = parseFloat(result.similarity);
+                for (const result of similarityResults) {
+                    const similarityScore = parseFloat(result.similarity);
 
-            // Only analyze results with a similarity between 50% and 100%
-            if (similarityScore > 50 && similarityScore < 100) {
-                const prediction = await openAiPredictiveAnalysis({
-                    image1: result.image1,
-                    image2: result.image2,
-                    similarity: result.similarity
-                });
+                    // Only analyze results with a similarity between 50% and 100%
+                    if (similarityScore > 50 && similarityScore < 100) {
+                        // Wait for 60 seconds before each analysis
+                        await new Promise(resolve => setTimeout(resolve, 60000));
 
-                // Add the detailed result to the list
-                detailedResults.push({
-                    image1: result.image1,
-                    image2: result.image2,
-                    similarity: result.similarity,
-                    result: prediction || "No prediction available"
-                });
-            }
-        }
+                        const prediction = await openAiPredictiveAnalysis({
+                            image1: result.image1,
+                            image2: result.image2,
+                            similarity: result.similarity
+                        });
 
-        // Save analysis results in MongoDB
-        await Petsitter.updateOne(
-            { email: req.body.email },
-            { $set: { similarityAnalysis: detailedResults } }
-        );
+                        // Add the detailed result to the list
+                        detailedResults.push({
+                            image1: result.image1,
+                            image2: result.image2,
+                            similarity: result.similarity,
+                            result: prediction || "No prediction available"
+                        });
+                    }
+                }
 
-        console.log("Detailed analysis saved to MongoDB:", detailedResults);
-    } catch (err) {
-        console.error("Error in predictive analysis:", err);
-    }
-}, 60000);  // 60-second delay
-    
-            // Function to analyze similarity using OpenAI API
+                // Save analysis results in MongoDB
+                await Petsitter.updateOne(
+                    { email: req.body.email },
+                    { $set: { similarityAnalysis: detailedResults } }
+                );
+
+                console.log("Detailed analysis saved to MongoDB:", detailedResults);
+            }, 60000);  // Initial 60-second delay before starting analysis
+        })
+        .catch(err => {
+            console.error(err);
+            res.status(500).json({ error: 'Database error' });
+        });
+});
+
+// Function to analyze similarity using OpenAI API
 async function openAiPredictiveAnalysis({ image1, image2, similarity }) {
-    const apiUrl = "https://backenddata.openai.azure.com/openai/deployments/gpt-4/chat/completions?api-version=2024-02-15-preview";  // Replace with your actual OpenAI API endpoint
-
+    const apiUrl = "https://backenddata.openai.azure.com/openai/deployments/gpt-4/chat/completions?api-version=2024-02-15-preview";
     try {
-        const response = await axios.post('https://backenddata.openai.azure.com/openai/deployments/gpt-4/chat/completions?api-version=2024-02-15-preview', {
+        const response = await axios.post(apiUrl, {
             model: "gpt-35-turbo",
             messages: [
-                { role: "user", content:`Given a similarity score of ${similarity}  between two images, is it likely these images are of the same person or similar items?`}
+                { role: "user", content: `Given a similarity score of ${similarity} between two images, is it likely these images are of the same person or similar items?` }
             ]
-        },{
+        }, {
             headers: {
                 "Content-Type": "application/json",
                 "api-key": API_KEY,
             }
-        }
-    );
-       
-        const data = await response.data;
-        console.log(data)
-        return data?.choices[0]?.message?.content 
+        });
+        const data = response.data;
+        console.log(data);
+        return data?.choices[0]?.message?.content;
     } catch (error) {
         console.error("Error calling OpenAI API:", error);
         return null;
     }
 }
-    })
-    .catch(err => {
-        console.error(err);
-        res.status(500).json({ error: 'Database error' }); // Send a JSON error response
-    }); 
-});
+
 
 // Route to handle owner details
 app.post('/owner', upload.fields([
@@ -524,12 +511,15 @@ app.post('/owner', upload.fields([
 setTimeout(async () => {
     try {
         const detailedResults = [];
-
+         //These dealays enable open ai not to return too many requests error
         for (const result of similarityResults) {
             const similarityScore = parseFloat(result.similarity);
 
             // Only analyze results with a similarity between 50% and 100%
-            if (similarityScore > 40 && similarityScore < 100) {
+            if (similarityScore > 50 && similarityScore < 100) {
+                // Wait for 60 seconds before each analysis
+                await new Promise(resolve => setTimeout(resolve, 60000));
+
                 const prediction = await openAiPredictiveAnalysis({
                     image1: result.image1,
                     image2: result.image2,
