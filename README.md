@@ -10,7 +10,7 @@ Website is designed to enhance the safety and reliability of a pet-sitting servi
 ## Key Features
 
 - OpenAI Offensive Content Check: Uses OpenAI's GPT model to identify offensive language in user messages.
-Image Similarity Analysis: Detects the similarity between uploaded images to check for potential duplicates or related images.
+- Image Similarity Analysis using Azure cognitive services : Detects the similarity between uploaded images to check for potential duplicates or related images.
 - Event Hub Integration: Sends offensive content analysis and image similarity results to Azure Event Hubs. Within the Azure portal, Event Hub’s Monitor section can show event flow, providing insights into data volume and latency.
 - Microsoft Fabric Reporting: Streams data to Microsoft Fabric for visualization and reporting, allowing administrators to monitor flagged content and similarity results.
 
@@ -19,11 +19,15 @@ Image Similarity Analysis: Detects the similarity between uploaded images to che
 - Clone the repository.
 - Install dependencies using:
 
+```bash
+
 cd frontend
 npm install
 
 cd backend
 npm install
+
+```
 
 ## Project Structure
 
@@ -57,6 +61,8 @@ Streaming to Fabric: Event Hubs routes the JSON data to Fabric, where it is visu
 Fabric Dashboard: Provides insights based on offensive content and image similarity checks, enabling administrators to proactively manage content.
 Example Event Hub Data Structure:
 
+```json
+
 {
   "email": "user@example.com",
   "message": "Flagged message content",
@@ -64,7 +70,10 @@ Example Event Hub Data Structure:
   "timestamp": "2023-12-10T10:00:00Z"
 }
 
-The information sent to Microsoft Fabric will display flagged terms, similarity scores, and images, creating a comprehensive dashboard for monitoring platform compliance and user interactions.
+```
+
+
+The information sent to Microsoft Fabric will diplay flagged terms, similarity scores, and images, creating a comprehensive dashboard for monitoring platform compliance and user interactions.
 
 ## Setup & Requirements
 
@@ -76,18 +85,29 @@ Microsoft Fabric Account: For dashboard access, set up a Fabric account and data
 
 Configure sensitive information such as:
 
+```js
 
 API_KEY="Your_OpenAI_API_Key"
 EVENT_HUB_CONNECTION_STRING="Your_Event_Hub_Connection_String"
 FABRIC_DATASET_KEY="Your_Microsoft_Fabric_Dataset_Key"
 
+```
+
 ## Running the Server
+
+```bash
 
 node Server.js
 
+```
+
 ## Running the WebSite
 
+```bash
+
 npm start
+
+```
 
 ## License
 This project is licensed under the MIT License. See the LICENSE file for details.
