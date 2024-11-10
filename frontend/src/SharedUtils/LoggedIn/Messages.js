@@ -179,6 +179,7 @@ export default function Messages(){
       
                 <div className="chat-page">
                     <div className="msg-inbox">
+                        <p className='p-2'>Caution ⚠ : Make sure to ask for live video of living environment and police clearance certificate for caution</p>
                         <div className="chats">
                             <div className="msg-page">
 
