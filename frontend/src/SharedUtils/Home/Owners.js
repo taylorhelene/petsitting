@@ -54,6 +54,7 @@ export default function Owners() {
                     <div>
                         <p>Pet Owner: <strong>{person.name}</strong></p>
                         <p>Preference: {person.preference}</p>
+                        <p>Similar photos percentage : {(person.similarityAnalysis?.length/21 * 100).toFixed(2)} </p>
                     </div>
 
                 </div>
@@ -74,6 +75,7 @@ export default function Owners() {
                                 <img src={selectedPerson.avatar} className="modal-avatar" alt="avatar" style={{ width: '100px', height: '100px', borderRadius: '50%' }} />
                                 <p><strong>Email:</strong> {selectedPerson.email}</p>
                                 <p><strong>Location:</strong> {selectedPerson.city}, {selectedPerson.state}</p>
+                                <p>Similar photos percentage : {(selectedPerson.similarityAnalysis?.length/21 * 100).toFixed(2)} </p>
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-secondary" onClick={closeModal}>Close</button>

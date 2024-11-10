@@ -1,5 +1,10 @@
 # Petsitting website
 
+## Inspiration
+
+Our pets need the utmost care when we go on vacation or have a long business schedule that requires us to be out of the house for some days. If relatives or neighbors are not available and pet homes have cages that many pets are not used to, we need pet sitters to care for the pets in a good environment. 
+
+
 ## Mission
 
 We provide a medium for pet owners and sitters to communicate and provide pet sitting services.
